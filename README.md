@@ -1,6 +1,6 @@
-# 💰 Simulador Financeiro — PRICE vs SAC
+# 💰 Simulador Financeiro com IOF
 
-> Simulador de prestações de crédito em HTML5 puro, sem dependências de servidor ou frameworks externos. Compara os sistemas de amortização **PRICE** e **SAC** com suporte a carência, taxa mensal/anual e evolução gráfica do saldo devedor.
+> Ferramenta interativa para simulação de financiamentos com cálculo automático de IOF, comparação entre sistemas de amortização PRICE e SAC, e visualização gráfica da evolução da dívida. Desenvolvida para Jupyter Notebook com interface moderna via `ipywidgets`.
 
 ---
 
@@ -8,222 +8,260 @@
 
 - [Visão Geral](#visão-geral)
 - [Funcionalidades](#funcionalidades)
+- [Pré-requisitos](#pré-requisitos)
+- [Instalação](#instalação)
 - [Como Usar](#como-usar)
-- [Cálculos Implementados](#cálculos-implementados)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Tecnologias](#tecnologias)
-- [Parâmetros de Entrada](#parâmetros-de-entrada)
-- [Abas de Resultado](#abas-de-resultado)
-- [Origem do Projeto](#origem-do-projeto)
+- [Cálculos e Fórmulas](#cálculos-e-fórmulas)
+- [Interface](#interface)
+- [Estrutura do Código](#estrutura-do-código)
+- [Exemplos de Uso](#exemplos-de-uso)
+- [Limitações Conhecidas](#limitações-conhecidas)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
 
 ---
 
-## Visão Geral
+## 🔍 Visão Geral
 
-O **Simulador Financeiro PRICE vs SAC** é uma aplicação web desenvolvida em HTML5, CSS3 e JavaScript puro. Foi convertida a partir de um notebook Python (Jupyter + ipywidgets) para rodar diretamente no navegador, sem necessidade de instalação, servidor ou runtime Python.
-
-A interface adota um tema escuro com grid de fundo, tipografia monospace/sans-serif e paleta verde-neon, projetada para leitura confortável de dados financeiros.
+O **Simulador Financeiro com IOF** é um notebook interativo que permite simular operações de crédito levando em conta o Imposto sobre Operações Financeiras (IOF). O usuário informa o capital desejado, a taxa de juros, o prazo e o período de carência, e o simulador retorna automaticamente a comparação entre as duas principais modalidades de amortização do mercado brasileiro: **Tabela PRICE** e **Sistema SAC**.
 
 ---
 
-## Funcionalidades
+## ✨ Funcionalidades
 
-- **Comparação PRICE × SAC** — calcula e exibe lado a lado as prestações de cada sistema
-- **Carência configurável** — de 0 a 24 meses, com juros capitalizados sobre o saldo
-- **Taxa mensal ou anual** — conversão automática para taxa mensal equivalente quando necessário
-- **Evolução gráfica** — linha do saldo devedor ao longo do tempo, com zona sombreada no período de carência
-- **Tabela de amortização** — parcela a parcela, com colunas de juros e amortização (SAC)
-- **Resumo executivo** — 4 cards com prestação, total pago e economia entre os sistemas
-- **Interface responsiva** — adapta-se a telas menores (mobile e tablet)
-- **Zero dependências de servidor** — abre diretamente no navegador via `File > Open`
+- **Cálculo de IOF** com alíquotas fixa e diária conforme legislação vigente
+- **Comparação PRICE vs SAC** com totais pagos e parcelas estimadas
+- **Período de carência** configurável de 0 a 12 meses
+- **Gráfico interativo** de evolução da dívida ao longo do tempo
+- **Interface visual** com tema escuro via CSS customizado
+- **Botão de limpeza** para reset rápido dos campos
+- **Tabela comparativa** em `pandas.DataFrame` exibida inline
 
 ---
 
-## Como Usar
+## 📦 Pré-requisitos
 
-### Opção 1 — Abrir localmente
+- Python **3.8+**
+- Jupyter Notebook ou JupyterLab
+- Conexão com internet (para carregar a imagem de fundo via Pexels)
+
+---
+
+## ⚙️ Instalação
+
+**1. Clone o repositório ou faça download do notebook:**
 
 ```bash
-# Não requer instalação. Basta abrir o arquivo no navegador:
-double-click simulador-financeiro.html
-# ou
-open simulador-financeiro.html       # macOS
-xdg-open simulador-financeiro.html  # Linux
+git clone https://github.com/seu-usuario/simulador-financeiro-iof.git
+cd simulador-financeiro-iof
 ```
 
-### Opção 2 — Servir com servidor local (recomendado para desenvolvimento)
+**2. Instale as dependências:**
 
 ```bash
-# Python 3
-python -m http.server 8080
-
-# Node.js (npx)
-npx serve .
-
-# Acesse: http://localhost:8080/simulador-financeiro.html
+pip install ipywidgets pandas matplotlib numpy notebook
 ```
 
-### Opção 3 — Deploy estático
+**3. Ative a extensão de widgets no Jupyter (se necessário):**
 
-O arquivo único pode ser hospedado em qualquer serviço de páginas estáticas:
+```bash
+jupyter nbextension enable --py widgetsnbextension
+```
 
-| Serviço | Comando / Instrução |
-|---------|---------------------|
-| GitHub Pages | Commit o `.html` na branch `gh-pages` |
-| Netlify | Arraste o arquivo para o painel de deploy |
-| Vercel | `vercel --prod` na pasta do arquivo |
-| Cloudflare Pages | Upload direto no dashboard |
+Para JupyterLab:
+
+```bash
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
+```
+
+**4. Execute o notebook:**
+
+```bash
+jupyter notebook simulador_financeiro.ipynb
+```
 
 ---
 
-## Cálculos Implementados
+## 🚀 Como Usar
+
+1. Abra o notebook no Jupyter e execute a célula principal com `Shift + Enter`
+2. Preencha os campos da interface:
+
+| Campo | Descrição | Exemplo |
+|---|---|---|
+| **Capital (R$)** | Valor total do financiamento | `50000` |
+| **Taxa (%)** | Taxa de juros **anual** em percentual | `12.5` |
+| **Meses** | Prazo total em meses | `36` |
+| **Carência** | Meses de carência antes da amortização | `3` |
+
+3. Clique em **CALCULAR COM IOF** para ver os resultados
+4. Navegue entre as abas **Resultados** e **Gráfico**
+5. Clique em **LIMPAR** para resetar todos os campos
+
+---
+
+## 📐 Cálculos e Fórmulas
+
+### IOF (Imposto sobre Operações Financeiras)
+
+O IOF é calculado com base em duas alíquotas somadas:
+
+```
+IOF_fixo  = Principal × 0,38%
+IOF_diário = Principal × (0,0082% × dias)   [limitado a 3% do principal]
+Dias       = min(meses × 30, 365)
+
+IOF_total  = IOF_fixo + IOF_diário
+```
 
 ### Taxa Mensal Equivalente
 
-Converte taxa anual nominal em mensal pelo regime de juros compostos:
+Conversão da taxa anual nominal para mensal equivalente pelo regime de juros compostos:
 
 ```
-r_mensal = (1 + r_anual)^(1/12) − 1
+taxa_mensal = (1 + taxa_anual)^(1/12) - 1
 ```
 
-### Capitalização na Carência
+### Tabela PRICE (Parcelas Fixas)
 
-Durante o período de carência, os juros são incorporados ao saldo devedor:
-
-```
-Saldo_pós_carência = Capital × (1 + r)^carência
-```
-
-### Sistema PRICE (Prestação Fixa)
-
-Prestação constante calculada sobre o saldo pós-carência:
+Com carência aplicada ao saldo devedor antes do início das parcelas:
 
 ```
-PMT = PV × [ r × (1+r)^n ] / [ (1+r)^n − 1 ]
-```
+Saldo_pós_carência = Principal × (1 + taxa)^carência
 
-Onde:
-- `PV` = saldo pós-carência
-- `r` = taxa mensal
-- `n` = número de parcelas
+PMT = Saldo × [ taxa × (1 + taxa)^n ] / [ (1 + taxa)^n - 1 ]
+```
 
 ### Sistema SAC (Amortização Constante)
 
-Amortização fixa, juros decrescentes a cada parcela:
-
 ```
-Amortização = PV / n
-Parcela_i   = (PV − (i−1) × Amortização) × r + Amortização
+Amortização_fixa  = Saldo_pós_carência / n
+Parcela_i         = (Saldo - (i × Amortização)) × taxa + Amortização
+Total_pago        = Σ Parcela_i  para i = 0 até n-1
 ```
 
-A primeira parcela é sempre a mais alta; a última é a mais baixa.
+> Em ambos os sistemas, o IOF é somado ao valor principal antes dos cálculos de parcela.
 
 ---
 
-## Estrutura do Projeto
+## 🖥️ Interface
+
+A interface é construída com `ipywidgets` e estilizada com CSS injetado via `IPython.display.HTML`:
 
 ```
-simulador-financeiro.html   # Arquivo único autocontido
+┌──────────────────────────────────────────┐
+│     💰 Simulador Financeiro com IOF      │
+├──────────────────────────────────────────┤
+│  Capital (R$):   [___________________]   │
+│  Taxa (%):       [___________________]   │
+│  Meses:          [___________________]   │
+│  Carência:       [====|_____]  (slider)  │
+│                                          │
+│  [     CALCULAR COM IOF     ]            │
+│  [          LIMPAR          ]            │
+├───────────────┬──────────────────────────┤
+│  Resultados   │  Gráfico                 │
+│               │                          │
+│  IOF: R$ ...  │  📈 Evolução da Dívida   │
+│  PRICE: R$... │                          │
+│  SAC:   R$... │                          │
+│  Tabela DF    │                          │
+└───────────────┴──────────────────────────┘
+```
+
+**Paleta de cores:**
+
+| Elemento | Cor |
+|---|---|
+| Destaque / títulos | `#50fa7b` (verde neon) |
+| Fundo principal | `#2d2d2d` (cinza escuro) |
+| Texto | `#f8f8f2` (branco suave) |
+| Botão limpar | `#ff5555` (vermelho) |
+
+---
+
+## 🗂️ Estrutura do Código
+
+```
+simulador_financeiro.ipynb
 │
-├── <style>                 # CSS (variáveis, layout, dark theme)
-│   ├── Variáveis CSS       # Paleta, fontes, raios, transições
-│   ├── Layout Grid         # Painel lateral + área de resultados
-│   ├── Componentes         # Cards, inputs, slider, botão, tabs
-│   └── Tabela & Gráfico    # Estilos de dados
+├── Funções de Cálculo
+│   ├── calcular_iof(valor, meses)
+│   ├── taxa_mensal_equivalente(taxa_anual)
+│   ├── juros_compostos(principal, taxa, tempo)
+│   ├── tabela_price(valor, taxa, meses, carencia)
+│   └── comparar_amortizacao(valor, taxa, meses, carencia)
 │
-├── <body>                  # Estrutura HTML
-│   ├── Header              # Título e subtítulo
-│   ├── Painel de Entrada   # Formulário de parâmetros
-│   └── Painel de Saída     # Abas: Resumo / Evolução / Amortização
+├── Estilo CSS (style_html)
 │
-└── <script>                # JavaScript puro
-    ├── Funções financeiras # taxaMensalEquivalente, tabelaPrice, calcularSAC
-    ├── Renderização        # Resumo HTML, gráfico Chart.js, tabela dinâmica
-    └── Interações          # Slider, tabs, botão simular
+├── Componentes de Interface (ipywidgets)
+│   ├── valor_input, taxa_input, tempo_input
+│   ├── carencia_input (slider)
+│   ├── calcular_btn, limpar_btn
+│   ├── output_resumo, output_grafico
+│   └── tabs (Resultados | Gráfico)
+│
+└── Handlers de Eventos
+    ├── atualizar_dashboard(b)
+    └── limpar_campos(b)
 ```
 
 ---
 
-## Tecnologias
+## 💡 Exemplos de Uso
 
-| Tecnologia | Versão | Uso |
-|------------|--------|-----|
-| HTML5 | — | Estrutura e semântica |
-| CSS3 | — | Layout, variáveis, animações |
-| JavaScript (ES2020) | — | Lógica financeira e DOM |
-| [Chart.js](https://www.chartjs.org/) | 4.4.1 | Gráfico de evolução do saldo |
-| [Google Fonts](https://fonts.google.com/) | — | Space Mono + DM Sans |
+**Exemplo 1 — Financiamento de veículo:**
 
-Todas as dependências externas são carregadas via CDN. O arquivo funciona **offline** se as fontes e o Chart.js já estiverem em cache no navegador.
+| Parâmetro | Valor |
+|---|---|
+| Capital | R$ 45.000,00 |
+| Taxa anual | 18% |
+| Prazo | 48 meses |
+| Carência | 0 meses |
 
----
-
-## Parâmetros de Entrada
-
-| Campo | Tipo | Padrão | Descrição |
-|-------|------|--------|-----------|
-| **Capital (R$)** | Número | 10.000 | Valor principal do financiamento |
-| **Tipo de Taxa** | Select | Mensal | Mensal ou Anual (converte automaticamente) |
-| **Taxa (%)** | Número | 1,5% | Taxa de juros no período selecionado |
-| **Prazo (meses)** | Inteiro | 24 | Número de parcelas a pagar |
-| **Carência** | Slider 0–24 | 0 | Meses sem pagamento (juros capitalizados) |
+**Resultado esperado:**
+- IOF estimado: ≈ R$ 1.575,00
+- Parcela PRICE (fixa): ≈ R$ 1.350,00/mês
+- Parcela SAC (1ª): ≈ R$ 1.720,00/mês
+- Total PRICE < Total SAC nas primeiras parcelas, mas SAC é mais barato no total
 
 ---
 
-## Abas de Resultado
+**Exemplo 2 — Crédito pessoal com carência:**
 
-### 🗂 Resumo
-
-Quatro cards comparativos exibindo:
-- Prestação PRICE (fixa) e SAC (primeira parcela)
-- Total pago em cada sistema
-- Taxa mensal efetivamente aplicada
-- Saldo após o período de carência
-- **Economia total** optando pelo SAC
-
-### 📈 Evolução
-
-Gráfico de linha mostrando a curva do saldo devedor ao longo dos meses. A região sombreada em roxo indica o período de carência.
-
-### 📊 Amortização
-
-Tabela completa com todas as parcelas, incluindo:
-- Prestação PRICE (badge verde)
-- Prestação SAC (badge roxo, decrescente)
-- Juros da parcela (SAC)
-- Amortização da parcela (SAC)
+| Parâmetro | Valor |
+|---|---|
+| Capital | R$ 10.000,00 |
+| Taxa anual | 24% |
+| Prazo | 12 meses |
+| Carência | 2 meses |
 
 ---
 
-## Origem do Projeto
+## ⚠️ Limitações Conhecidas
 
-Este projeto foi convertido a partir de um notebook **Jupyter (Python)** que utilizava:
-
-```python
-import ipywidgets as widgets
-import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
-```
-
-A conversão substituiu cada componente Python pelo equivalente web:
-
-| Python / Jupyter | HTML5 |
-|-----------------|-------|
-| `ipywidgets.FloatText` | `<input type="number">` |
-| `ipywidgets.IntSlider` | `<input type="range">` |
-| `ipywidgets.Dropdown` | `<select>` |
-| `ipywidgets.Tab` | Tabs em CSS + JS puro |
-| `matplotlib.pyplot` | Chart.js |
-| `pandas.DataFrame` | `<table>` gerada dinamicamente |
-| `IPython.display.HTML` | Template literals JS |
+- A taxa informada é tratada como **taxa anual** e convertida internamente para mensal. Certifique-se de inserir o valor correto.
+- O cálculo de IOF segue a lógica simplificada prevista na legislação vigente, podendo haver pequenas variações dependendo do tipo de operação financeira e do contrato específico.
+- A imagem de fundo da interface depende de conexão com internet (Pexels). Em ambientes offline, o fundo será exibido como cor sólida.
+- O gráfico exibe a **evolução bruta dos juros compostos**, não o saldo devedor residual parcelado — serve como referência visual de crescimento exponencial da dívida sem amortização.
 
 ---
 
-## Licença
+## 🛠️ Tecnologias Utilizadas
 
-Distribuído sob a licença **MIT**. Sinta-se livre para usar, modificar e redistribuir.
+| Biblioteca | Versão mínima | Uso |
+|---|---|---|
+| `ipywidgets` | 7.x | Interface interativa no Jupyter |
+| `pandas` | 1.x | Tabela comparativa de resultados |
+| `matplotlib` | 3.x | Gráfico de evolução da dívida |
+| `numpy` | 1.x | Vetor de eixo X do gráfico |
+| `IPython` | — | Exibição de HTML e limpeza de output |
 
 ---
 
-<p align="center">Feito com HTML5 puro · Sem framework · Sem build step</p>
+## 📄 Licença
+
+Distribuído sob a licença MIT. Consulte o arquivo `LICENSE` para mais detalhes.
+
+---
+
+*Desenvolvido para fins educacionais e de simulação. Não substitui a análise de um profissional financeiro.*
